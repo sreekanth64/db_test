@@ -1,0 +1,17 @@
+# Sales medallion ETL: refresh silver then gold from bronze.
+# Notebook tasks run on serverless job compute (no cluster definition needed).
+
+resources:
+  jobs:
+    sales_etl:
+      name: sales_silver_gold_etl
+
+      tasks:
+        - task_key: silver_layer
+          notebook_task:
+            notebook_path: ../src/silver_sales_nb.ipynb
+        - task_key: gold_layer
+          depends_on:
+            - task_key: silver_layer
+          notebook_task:
+            notebook_path: ../src/gold_sales_nb.ipynb
